@@ -1,14 +1,25 @@
 <?php
 
 require_once('PASL/Web/Simpl/Page.php');
+require_once('PASL/Web/Simpl/MainNav.php');
+require_once('lib/MainNavItem.php');
 
-class naptime extends PASL\Web\Simpl\Page
+use PASL\Web\Simpl as Web;
+
+class naptime extends Web\Page
 {
 	private static $instance = null;
+	
+	public $MainNav = null;
 	
 	public function __construct()
 	{
 		$this->body = 'Body';
+		
+		$this->MainNav = new Web\MainNav();
+		$this->MainNav->addMenuItem(new naptime\MainNavItem('API', '#'));
+		$this->MainNav->addMenuItem(new naptime\MainNavItem('Developer Guide', '#'));
+		$this->MainNav->addMenuItem(new naptime\MainNavItem('Integration Examples', '#'));
 	}
 	
 	public static function Main()
