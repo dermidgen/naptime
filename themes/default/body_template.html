@@ -45,8 +45,11 @@
 		<div class="outer">
 			<div class="inner">
 				<div class="content bodyheader">
-					<div class="title"><span class="hlNormal">[Project / Company]</span> / <span class="hlDark">REST API Reference</span></div>
-					<div class="tagline">Internal Services and APIs</div>
+					<div class="title">
+						<span class="hlNormal"><?php print $this->Project; ?></span> / 
+						<span class="hlDark"><?php print $this->Title; ?></span>
+					</div>
+					<div class="tagline"><?php print $this->Description; ?></div>
 				</div>
 				<div class="mainnav">
 					<ul class="navmenu"><?php print $this->MainNav; ?></ul>

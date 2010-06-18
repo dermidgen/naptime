@@ -14,8 +14,18 @@ class naptime extends Web\Page
 	
 	public $MainNav = null;
 	
+	public $Project = null;
+	public $Company = null;
+	public $Title = null;
+	public $Description = null;
+	
 	public function __construct()
 	{
+		$this->Project = '[Project / Company]';
+		$this->Company = '[Project / Company]';
+		$this->Title = 'REST API Reference';
+		$this->Description = 'Internal Services and APIs';
+		
 		$this->body = 'Body';
 		
 		$this->MainNav = new Web\MainNav();
