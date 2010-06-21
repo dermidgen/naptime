@@ -28,18 +28,24 @@ class naptime extends Web\Page
 		
 		$this->body = 'Body';
 		
+		/* Example code for creating the menu entries in the DB - we'll move 
+		 * this stuff into a more dynamic location later once there is an
+		 * admin for managing menus.  Enable this block add menu's to the 
+		 * database -->* /
 		$this->MainNav = new Web\MainNav();
 		$this->MainNav->addMenuItem(new naptime\MainNavItem('API', '#', 'API', null));
 		$this->MainNav->addMenuItem(new naptime\MainNavItem('Developer Guide', '#', 'Developer Guide', null));
 		$this->MainNav->addMenuItem(new naptime\MainNavItem('Integration Examples', '#', 'Integration Examples', null));
-		//naptime\NavFactory::storeNav('MainNav',$this->MainNav);
+		naptime\NavFactory::storeNav('MainNav',$this->MainNav);
+		
 
 		$this->SubNav = new Web\SubNav();
 		$this->SubNav->addMenuItem(new naptime\MainNavItem('Getting Started', '#', 'Getting Started', null));
 		$this->SubNav->addMenuItem(new naptime\MainNavItem('API Methods', '#', 'API Methods', null));
 		$this->SubNav->addMenuItem(new naptime\MainNavItem('HTTP Status Codes', '#', 'HTTP Status Codes', null));
 		$this->SubNav->addMenuItem(new naptime\MainNavItem('Authentication', '#', 'Authentication', null));
-		//naptime\NavFactory::storeNav('SubNav', $this->SubNav);
+		naptime\NavFactory::storeNav('SubNav', $this->SubNav);
+		/**/
 		
 		$this->MainNav = naptime\NavFactory::fetchNav('MainNav');
 		$this->SubNav = naptime\NavFactory::fetchNav('SubNav');
