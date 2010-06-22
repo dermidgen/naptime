@@ -6,16 +6,10 @@ require_once('PASL/Web/Simpl/MainNav.php');
 require_once('PASL/Web/Simpl/SubNav.php');
 require_once('PASL/Web/Simpl/SubNavItem.php');
 require_once('lib/MainNavItem.php');
+require_once('lib/DB.php');
 
 class NavFactory
 {
-	private static $db = null;
-	
-	private static function db()
-	{
-		if (is_null(self::$db)) self::$db = new \CouchdbClient("http://localhost:5984");
-		return self::$db;
-	}
 	
 	public static function itemFactory($navType, $item=null)
 	{
@@ -63,7 +57,7 @@ class NavFactory
 	
 	public static function fetchNav($id)
 	{
-		$db = self::db();
+		$db = db::GetInstance();
 		$res = $db->listDatabases();
 		
 		if ($db->selectDB("nav_menus")) {
@@ -80,7 +74,7 @@ class NavFactory
 	
 	public static function storeNav($id, \PASL\Web\Simpl\NavMenu $menu)
 	{
-		$db = self::db();
+		$db = db::GetInstance();
 		
 		// Let's make sure the database is there
 		if (!in_array('nav_menus',$db->listDatabases())) {
@@ -95,7 +89,7 @@ class NavFactory
 	
 	public static function deleteNav($id)
 	{
-		$db = self::db();
+		$db = db::GetInstance();
 		$menu = self::fetchNav($id);
 		if ($menu) $db->deleteDoc($id,$menu->_rev);
 	}

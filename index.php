@@ -6,11 +6,15 @@ require_once('lib/MainNavItem.php');
 
 require_once('lib/NavFactory.php');
 
+require_once('lib/Config.php');
+
 use PASL\Web\Simpl as Web;
 
 class naptime extends Web\Page
 {
 	private static $instance = null;
+	
+	public $config = null;
 	
 	public $MainNav = null;
 	
@@ -21,12 +25,12 @@ class naptime extends Web\Page
 	
 	public function __construct()
 	{
-		$this->Project = '[Project / Company]';
-		$this->Company = '[Project / Company]';
-		$this->Title = 'REST API Reference';
-		$this->Description = 'Internal Services and APIs';
+		$this->config = naptime\config::GetInstance();
 		
-		$this->body = 'Body';
+		$this->Project = $this->config->project->name;
+		$this->Company = $this->config->company->name;
+		$this->Title = $this->config->project->title;
+		$this->Description = $this->config->project->description;
 		
 		/* Example code for creating the menu entries in the DB - we'll move 
 		 * this stuff into a more dynamic location later once there is an
@@ -51,9 +55,34 @@ class naptime extends Web\Page
 		$this->SubNav = naptime\NavFactory::fetchNav('SubNav');
 	}
 	
+	public function getPath($depth=null, $limit=1)
+	{
+		$path = explode('/',$_SERVER['REQUEST_URI']);
+		array_shift($path); // Kill leading slash
+		
+		if (is_null($depth)) return $path; // return the full array
+		else { // give them a sliced array back
+			if($limit === 1) return $path[$depth];
+			else return array_slice($path, $depth, $limit);
+		}
+	}
+	
+	public function run()
+	{
+		switch($this->getPath(0))
+		{
+			case "admin":
+				$this->body = "Admin";
+			break;
+			default:
+				$this->body = "Home";
+		}
+	}
+	
 	public static function Main()
 	{
 		$app = naptime::GetInstance();
+		$app->run();
 		$app->display();
 	}
 	
