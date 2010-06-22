@@ -2,13 +2,17 @@
 
 namespace naptime;
 
+/*
 require_once('PASL/Web/Simpl/MainNav.php');
 require_once('PASL/Web/Simpl/SubNav.php');
 require_once('PASL/Web/Simpl/SubNavItem.php');
-require_once('lib/MainNavItem.php');
-require_once('lib/DB.php');
+*/
 
-class NavFactory
+require_once('lib/MainNavItem.php');
+require_once('lib/navMenu.php');
+require_once('lib/db.php');
+
+class navFactory
 {
 	
 	public static function itemFactory($navType, $item=null)
@@ -20,12 +24,8 @@ class NavFactory
 		
 		switch($navType)
 		{
-			case "MainNav":
+			default:
 				return new MainNavItem($title, $link, $alt, $parent);
-			break;
-			case "SubNav":
-				return new MainNavItem($title, $link, $alt, $parent);
-			break;
 		}
 	}
 	
@@ -33,12 +33,8 @@ class NavFactory
 	{
 		switch($navType)
 		{
-			case "MainNav":
-				$menu = new \PASL\Web\Simpl\MainNav();
-			break;
-			case "SubNav":
-				$menu = new \PASL\Web\Simpl\SubNav();
-			break;
+			default:
+				$menu = new navMenu();
 		}
 		
 		return $menu;
@@ -58,7 +54,6 @@ class NavFactory
 	public static function fetchNav($id)
 	{
 		$db = db::GetInstance();
-		$res = $db->listDatabases();
 		
 		if ($db->selectDB("nav_menus")) {
 			$res = $db->getDoc($id);
@@ -83,7 +78,10 @@ class NavFactory
 		
 		$db->selectDB("nav_menus");
 		
-		if (!$menu->_id) $menu->_id = $id;
+		if (!isset($menu->_id)) @$menu->_id = $id;
+		else if (!isset($menu->_rev) && self::fetchNav($id))
+			$menu->_rev = self::fetchNav($id)->_rev; // if we have an _id let's throw in _rev so we can update it
+		
 		$db->storeDoc(json_encode($menu));
 	}
 	

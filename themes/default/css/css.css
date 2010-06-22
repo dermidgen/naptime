@@ -114,16 +114,20 @@ a, a:link, a:hover, a:active, a:visited {
 	color:#5594C5;
 }
 
+.hidden {
+	display: none;
+}
+
 #body {
 }
 
-ul.navmenu {
+.navmenu {
 	list-style: none;
 	margin:0;
 	padding:0;
 }
 
-li.navitem {
+.navitem {
 	margin:0 5px;
 	padding:0;
 	float:left;
@@ -157,6 +161,14 @@ li.navitem {
 	font-size: 16px;
 	font-weight: normal;
 	color:#5594C5;
+	text-shadow: rgba(255, 255, 255, 0.699219) 1px 1px 0px;
+}
+
+.mainnav .navmenu .selected {
+	font-size: 16px;
+	font-weight: bold;
+	line-height: 42px;
+	color:#999;
 	text-shadow: rgba(255, 255, 255, 0.699219) 1px 1px 0px;
 }
 

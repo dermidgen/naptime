@@ -12,10 +12,10 @@ class MainNavItem extends \PASL\Web\Simpl\MainNavItem
 	 */
 	function __toString()
 	{
-		$requestURI = ltrim($_SERVER['REQUEST_URI'],"/");
+		$requestURI = $_SERVER['REQUEST_URI'];
 
-		if ($this->selected && $requestURI != $this->link) return "<li class=\"selected navitem\"><a href=\"{$this->link}\" alt=\"{$this->caption}\">{$this->title}</a></li>";
-		else if ($this->selected) return "<li class=\"selected navitem\">{$this->title}</li>";
+		if ($this->selected && $requestURI != $this->link) return "<li class=\"navitem selected\"><a href=\"{$this->link}\" alt=\"{$this->caption}\">{$this->title}</a></li>";
+		else if ($this->selected) return "<li class=\"navitem selected\">{$this->title}</li>";
 		else return "<li class=\"navitem\"><a href=\"{$this->link}\" alt=\"{$this->caption}\">{$this->title}</a></li>";
 	}
 }
