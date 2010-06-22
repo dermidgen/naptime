@@ -55,6 +55,10 @@ class naptime extends Web\Page
 		$this->SubNav = naptime\NavFactory::fetchNav('SubNav');
 	}
 	
+	private function loadModule($name)
+	{
+	}
+	
 	public function getPath($depth=null, $limit=1)
 	{
 		$path = explode('/',$_SERVER['REQUEST_URI']);
