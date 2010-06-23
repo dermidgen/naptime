@@ -206,6 +206,29 @@ a, a:link, a:hover, a:active, a:visited {
 	color:#333;
 }
 
+.notices {
+	line-height: 22px;
+	font-size: 15px;
+	text-shadow: rgba(0, 0, 0, 0.15) 1px 1px 0px;
+}
+
+.notices img {
+	float:left;
+	margin: 0 5px 0 0;
+}
+
+.notices .alert {
+	color: #E04444;
+}
+
+.notices .notice {
+	color: #26B170;
+}
+
+.notices .error {
+	color: #E04444;
+}
+
 .pageform {
 	border: 1px solid #ccc;
 	-webkit-border-radius: 4px;

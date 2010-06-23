@@ -14,13 +14,18 @@ class notices extends \PASL\Web\Simpl\Page
 	
 	public function addNotice($string, $type="notice")
 	{
+		$theme = \naptime::GetInstance()->Theme;
+		
 		switch($type)
 		{
 			case "alert":
-				$notice = '<div class="alert">'.$string.'</div>';
+				$notice = '<div class="alert"><img src="/themes/'.$theme.'/images/icons/dialog-warning.png"/>'.$string.'</div>';
 			break;
 			case "notice":
-				$notice = '<div class="notice">'.$string.'</div>';
+				$notice = '<div class="notice"><img src="/themes/'.$theme.'/images/icons/dialog-information.png"/>'.$string.'</div>';
+			break;
+			case "error":
+				$notice = '<div class="error"><img src="/themes/'.$theme.'/images/icons/dialog-error.png"/>'.$string.'</div>';
 			break;
 			default:
 				$notice = '<div>'.$string.'</div>';

@@ -35,6 +35,8 @@ class admin extends \PASL\Web\Simpl\Page
 			
 			if($module->saveSettings($configOptions))
 				\naptime\notices::GetInstance()->addNotice('Your settings have been saved');
+			else
+				\naptime\notices::GetInstance()->addNotice('Doh! Something went wrong and your changes could not be saved! - (verify config file permissions)','error');
 		}
 
 		$this->subNav->hide();
