@@ -3,6 +3,7 @@
 namespace naptime\views;
 
 require_once('lib/MainNavItem.php');
+require_once('lib/auth.php');
 
 class admin extends \PASL\Web\Simpl\Page
 {
@@ -13,6 +14,9 @@ class admin extends \PASL\Web\Simpl\Page
 	
 	public function __construct()
 	{
+		$auth = true;
+		if ($auth == false) { header("Location: /login"); }
+		
 		$this->mainNav = \naptime::GetInstance()->mainNav;
 		$this->subNav = \naptime::GetInstance()->subNav;
 		
@@ -32,6 +36,8 @@ class admin extends \PASL\Web\Simpl\Page
 		if ($_POST) {
 			$module = \naptime::GetInstance()->loadModule('admin');
 			$configOptions = \naptime::GetInstance()->clean($_POST);
+			
+			if ($configOptions['project_name'] == 'Fuck You') \naptime\notices::GetInstance()->addNotice('Really? That project name is pretty offensive, dude.','alert');
 			
 			if($module->saveSettings($configOptions))
 				\naptime\notices::GetInstance()->addNotice('Your settings have been saved');

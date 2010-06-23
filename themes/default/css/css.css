@@ -206,6 +206,14 @@ a, a:link, a:hover, a:active, a:visited {
 	color:#333;
 }
 
+.pagedescription.standalone {
+	margin-top: 10px;
+}
+
+.pagedescription.standalone .content:first-child {
+	border-top:1px solid #ddd;
+}
+
 .notices {
 	line-height: 22px;
 	font-size: 15px;
@@ -266,7 +274,7 @@ a, a:link, a:hover, a:active, a:visited {
 	color: #333;
 }
 
-.pageform input[type=text], .pageform textarea {
+.pageform input[type=text], .pageform textarea, .pageform input[type=password] {
 	border: 1px solid #ccc;
 	-webkit-border-radius: 4px;
 	-moz-border-radius: 4px;

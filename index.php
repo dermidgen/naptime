@@ -110,6 +110,9 @@ class naptime extends Web\Page
 			case "admin":
 				$view = $this->loadView('admin');
 			break;
+			case "login":
+				$view = $this->loadView('auth');
+			break;
 			default:
 				$this->body = "Home";
 		}
