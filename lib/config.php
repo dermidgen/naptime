@@ -44,6 +44,16 @@ class config
 		$this->configObject = json_decode($config);
 	}
 	
+	public function saveConfig()
+	{
+		return file_put_contents('./config.js', json_encode($this->configObject));
+	}
+	
+	public function reload()
+	{
+		$this->loadConfig();
+	}
+	
 	//TODO: add db persistance and loading
 
 	/**

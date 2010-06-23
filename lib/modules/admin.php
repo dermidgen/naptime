@@ -2,63 +2,24 @@
 
 namespace naptime\modules;
 
-require_once('lib/MainNavItem.php');
-
-class admin extends \PASL\Web\Simpl\Page
+class admin
 {
 	private static $instance = null;
 	
-	public $mainNav = null;
-	public $subNav = null;
-	
 	public function __construct()
 	{
-		$this->mainNav = \naptime::GetInstance()->mainNav;
-		$this->subNav = \naptime::GetInstance()->subNav;
-		
-		$basepath = '/'.\naptime::GetInstance()->getPath(0);
-		
-		$this->mainNav->menuItems = $this->subNav->menuItems = Array();
-		$this->mainNav->addMenuItem(new \naptime\MainNavItem('Settings', 'Manage Naptime! Settings', $basepath.'/settings', null));
-		$this->mainNav->addMenuItem(new \naptime\MainNavItem('Pages', 'Manage Pages', $basepath.'/pages', null));
-		$this->mainNav->addMenuItem(new \naptime\MainNavItem('Documents', 'Manage Documents', $basepath.'/docs', null));
-		$this->mainNav->addMenuItem(new \naptime\MainNavItem('Navigation', 'Manage Menus &amp; Links', $basepath.'/navigation', null));
-		
-		$this->mainNav->selectItemByAttribute('link',$_SERVER['REQUEST_URI']);
 	}
 	
-	private function settings()
+	public function saveSettings($configOptions)
 	{
-		$this->subNav->hide();
-		\naptime::GetInstance()->pageDescription = 'Manage Naptime! Settings';
-
-		$this->TOKENS['projectName'] = \naptime::GetInstance()->config->project->name;
-		$this->TOKENS['projectTitle'] = \naptime::GetInstance()->config->project->title;
-		$this->TOKENS['projectDescription'] = \naptime::GetInstance()->config->project->description;
-		$this->TOKENS['companyName'] = \naptime::GetInstance()->config->company->name;
-
-		$this->body = $this->loadAndParse('admin/settings.html');
-	}
-	
-	public function run()
-	{
-		switch(\naptime::GetInstance()->getPath(1))
-		{
-			case "settings":
-				$this->settings();
-			break;
-			case "pages":
-				$this->body = join('/', \naptime::GetInstance()->getPath(0,2));
-			break;
-			case "docs" || "documents":
-				$this->body = join('/', \naptime::GetInstance()->getPath(0,2));
-			break;
-			case "navigation":
-				$this->body = join('/', \naptime::GetInstance()->getPath(0,2));
-			break;
-			default:
-				$this->body = 'admin';
-		}
+		$config = \naptime\config::GetInstance();
+		
+		if (key_exists('project_name',$configOptions)) $config->project->name = $configOptions['project_name'];
+		if (key_exists('project_title',$configOptions)) $config->project->title = $configOptions['project_title'];
+		if (key_exists('project_description',$configOptions)) $config->project->description = $configOptions['project_description'];
+		if (key_exists('company_name',$configOptions)) $config->company->name = $configOptions['company_name'];
+		
+		return $config->saveConfig();
 	}
 	
 	public static function GetInstance()

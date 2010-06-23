@@ -5,7 +5,7 @@ require_once('PASL/Web/Simpl/MainNav.php');
 require_once('lib/MainNavItem.php');
 require_once('lib/navMenu.php');
 require_once('lib/navFactory.php');
-
+require_once('lib/notices.php');
 require_once('lib/config.php');
 
 use PASL\Web\Simpl as Web;
@@ -19,20 +19,25 @@ class naptime extends Web\Page
 	public $mainNav = null;
 	public $subNav = null;
 	
+	public $pageDescription = null;
+	public $notices = null;
+	
 	public $project = null;
 	public $company = null;
 	public $title = null;
 	public $description = null;
+	
 	public $body = null;
 	
 	public function __construct()
 	{
-		$this->config = naptime\config::GetInstance();
+		$this->config = &naptime\config::GetInstance();
 		
-		$this->project = $this->config->project->name;
-		$this->company = $this->config->company->name;
-		$this->title = $this->config->project->title;
-		$this->description = $this->config->project->description;
+		$this->project = &$this->config->project->name;
+		$this->company = &$this->config->company->name;
+		$this->title = &$this->config->project->title;
+		$this->description = &$this->config->project->description;
+		$this->notices = &naptime\notices::GetInstance();
 		
 		/* Example code for creating the menu entries in the DB - we'll move 
 		 * this stuff into a more dynamic location later once there is an
@@ -46,7 +51,7 @@ class naptime extends Web\Page
 		$this->mainNav->addMenuItem(new naptime\MainNavItem('API', '#', 'API', null));
 		$this->mainNav->addMenuItem(new naptime\MainNavItem('Developer Guide', '#', 'Developer Guide', null));
 		$this->mainNav->addMenuItem(new naptime\MainNavItem('Integration Examples', '#', 'Integration Examples', null));
-		naptime\navFactory::storeNav('adminNav',$this->mainNav);
+		naptime\navFactory::storeNav('mainNav',$this->mainNav);
 		
 
 		$this->subNav = new naptime\navMenu();
@@ -61,12 +66,31 @@ class naptime extends Web\Page
 		$this->subNav = naptime\navFactory::fetchNav('subNav');
 	}
 	
-	private function loadModule($name)
+	public function loadModule($name)
 	{
 		if (file_exists('lib/modules/'.$name.'.php')) require_once('lib/modules/'.$name.'.php');
 		if (class_exists('naptime\\modules\\'.$name)) return call_user_func(array('naptime\\modules\\'.$name,'GetInstance'));
 	}
 	
+	public function loadView($name)
+	{
+		if (file_exists('lib/views/'.$name.'.php')) require_once('lib/views/'.$name.'.php');
+		if (class_exists('naptime\\views\\'.$name)) return call_user_func(array('naptime\\views\\'.$name,'GetInstance'));
+	}
+	
+	public function clean($object, $strip_tags=true)
+	{
+		$clean = function(&$s, $key, $strip_tags=true)
+		{
+			htmlentities(($strip_tags === true) ? strip_tags($s) : $s);
+		};
+		
+		if(is_array($object)) array_walk($object, $clean, $strip_tags);
+		else if(is_string($obejct)) $clean($object);
+		
+		return $object;
+	}
+
 	public function getPath($depth=null, $limit=1)
 	{
 		$path = explode('/',$_SERVER['REQUEST_URI']);
@@ -84,19 +108,19 @@ class naptime extends Web\Page
 		switch($this->getPath(0))
 		{
 			case "admin":
-				$module = $this->loadModule('admin');
+				$view = $this->loadView('admin');
 			break;
 			default:
 				$this->body = "Home";
 		}
 
-		if (!$module) return;
+		if (!isset($view) || is_null($view)) return;
 		
-		$module->run();
+		$view->run();
 		
 		/* We want to preserve any output that may have already been
 		 * directly set during module runtime */
-		$this->body = (is_null($this->body) || !isset($this->body)) ? $module->body : $this->body . $module->body;
+		$this->body = (is_null($this->body) || !isset($this->body)) ? $view->body : $this->body . $view->body;
 	}
 	
 	public static function Main()

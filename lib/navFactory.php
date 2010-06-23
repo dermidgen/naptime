@@ -56,11 +56,16 @@ class navFactory
 		$db = db::GetInstance();
 		
 		if ($db->selectDB("nav_menus")) {
-			$res = $db->getDoc($id);
-			if ($res) {
-				$menu = self::buildMenuFromArray($res->_id,$res->menuItems);
-				$menu->_rev = $res->_rev;
-				return $menu;
+			try {
+				$res = $db->getDoc($id);
+				if ($res) {
+					$menu = self::buildMenuFromArray($res->_id,$res->menuItems);
+					$menu->_rev = $res->_rev;
+					return $menu;
+				}
+			} catch (\CouchdbClientException $e) {
+				//error_log('couchdb exception caught');
+				return null;
 			}
 		}
 		
@@ -79,7 +84,7 @@ class navFactory
 		$db->selectDB("nav_menus");
 		
 		if (!isset($menu->_id)) @$menu->_id = $id;
-		else if (!isset($menu->_rev) && self::fetchNav($id))
+		else if (!isset($menu->_rev) && @self::fetchNav($id))
 			$menu->_rev = self::fetchNav($id)->_rev; // if we have an _id let's throw in _rev so we can update it
 		
 		$db->storeDoc(json_encode($menu));

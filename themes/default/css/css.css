@@ -208,8 +208,8 @@ a, a:link, a:hover, a:active, a:visited {
 
 .pageform {
 	border: 1px solid #ccc;
-	-webkit-border-radius: 3px;
-	-moz-border-radius: 3px;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
 	
 	padding: 20px;
 
@@ -230,15 +230,28 @@ a, a:link, a:hover, a:active, a:visited {
 	border-bottom: 1px dotted #ccc;
 }
 
+.pageform li:first-child {
+	border-top: none;
+}
+
+.pageform li:last-child {
+	border-bottom: none;
+}
+
 .pageform legend {
-	font-weight: bold;
-	color: #444;
+	font-size: 14px;
+	color: #333;
 }
 
 .pageform input[type=text], .pageform textarea {
 	border: 1px solid #ccc;
-	-webkit-border-radius: 3px;
-	-moz-border-radius: 3px;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	padding: 8px;
+	font-size: 14px;
+	font-family: inherit;
+	color: #333;
+	color:#5594C5;
 }
 
 .pageform label {
@@ -246,7 +259,34 @@ a, a:link, a:hover, a:active, a:visited {
 	display:block;
 	float: left;
 	width: 150px;
-	font-size: 15px;
-	font-weight: bold;
+	margin-top: 10px;
+	margin-left: 2px;
+	font-size: 16px;
+	font-weight: normal;
+	color:#333;
+	text-shadow: rgba(255, 255, 255, 0.699219) 1px 1px 0px;
+}
+
+.pageform .actions {
+	margin-top: 10px;
+	text-align: right;
+}
+
+button, input[type=submit], input[type=reset] {
+	border: 1px solid #ccc;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	padding: 8px 12px;
+	font-size: 14px;
+	font-family: inherit;
 	color: #333;
+	color:#5594C5;
+	text-shadow: rgba(255, 255, 255, 0.699219) 1px 1px 0px;
+	text-transform: capitalize;
+	background: -webkit-gradient(linear, 0% 0%, 0 100%, from(#eee), to(#e0e0e0));
+	background: -moz-linear-gradient(0% 100% 90deg,#eee, #e0e0e0 100%);
+}
+
+button[disabled=true],  input[disabled=true] {
+	color: #999;
 }
