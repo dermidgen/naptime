@@ -10,6 +10,8 @@ require_once('lib/config.php');
 
 use PASL\Web\Simpl as Web;
 
+session_start();
+
 class naptime extends Web\Page
 {
 	private static $instance = null;
@@ -31,39 +33,6 @@ class naptime extends Web\Page
 	
 	public function __construct()
 	{
-		$this->config = &naptime\config::GetInstance();
-		
-		$this->project = &$this->config->project->name;
-		$this->company = &$this->config->company->name;
-		$this->title = &$this->config->project->title;
-		$this->description = &$this->config->project->description;
-		$this->notices = &naptime\notices::GetInstance();
-		
-		/* Example code for creating the menu entries in the DB - we'll move 
-		 * this stuff into a more dynamic location later once there is an
-		 * admin for managing menus.  Enable this block add menu's to the 
-		 * database -->* /
-		require_once('lib/db.php');
-		$db = naptime\db::GetInstance();
-		$db->deleteDatabase('nav_menus');
-		
-		$this->mainNav = new naptime\navMenu();
-		$this->mainNav->addMenuItem(new naptime\MainNavItem('API', '#', 'API', null));
-		$this->mainNav->addMenuItem(new naptime\MainNavItem('Developer Guide', '#', 'Developer Guide', null));
-		$this->mainNav->addMenuItem(new naptime\MainNavItem('Integration Examples', '#', 'Integration Examples', null));
-		naptime\navFactory::storeNav('mainNav',$this->mainNav);
-		
-
-		$this->subNav = new naptime\navMenu();
-		$this->subNav->addMenuItem(new naptime\MainNavItem('Getting Started', '#', 'Getting Started', null));
-		$this->subNav->addMenuItem(new naptime\MainNavItem('API Methods', '#', 'API Methods', null));
-		$this->subNav->addMenuItem(new naptime\MainNavItem('HTTP Status Codes', '#', 'HTTP Status Codes', null));
-		$this->subNav->addMenuItem(new naptime\MainNavItem('Authentication', '#', 'Authentication', null));
-		naptime\navFactory::storeNav('subNav', $this->subNav);
-		/**/
-		
-		$this->mainNav = naptime\navFactory::fetchNav('mainNav');
-		$this->subNav = naptime\navFactory::fetchNav('subNav');
 	}
 	
 	public function loadModule($name)
@@ -108,17 +77,62 @@ class naptime extends Web\Page
 		switch($this->getPath(0))
 		{
 			case "admin":
-				$view = $this->loadView('admin');
+				$view = 'admin';
 			break;
 			case "login":
-				$view = $this->loadView('auth');
+				$view = 'auth';
+			break;
+			case "logout":
+				session_destroy();
+				header("Location: /");
+				exit;
 			break;
 			default:
 				$this->body = "Home";
 		}
 
-		if (!isset($view) || is_null($view)) return;
+		if (!isset($view) || is_null($view)) {
+			if ($this->getPath(0) != '' || $this->getPath(1)) $this->body = '404';
+		}
 		
+		$this->config = &naptime\config::GetInstance();
+		
+		$this->project = &$this->config->project->name;
+		$this->company = &$this->config->company->name;
+		$this->title = &$this->config->project->title;
+		$this->description = &$this->config->project->description;
+		$this->notices = &naptime\notices::GetInstance();
+		
+		/* Example code for creating the menu entries in the DB - we'll move 
+		 * this stuff into a more dynamic location later once there is an
+		 * admin for managing menus.  Enable this block add menu's to the 
+		 * database -->* /
+		require_once('lib/db.php');
+		$db = naptime\db::GetInstance();
+		$db->deleteDatabase('nav_menus');
+		
+		$this->mainNav = new naptime\navMenu();
+		$this->mainNav->addMenuItem(new naptime\MainNavItem('API', '#', 'API', null));
+		$this->mainNav->addMenuItem(new naptime\MainNavItem('Developer Guide', '#', 'Developer Guide', null));
+		$this->mainNav->addMenuItem(new naptime\MainNavItem('Integration Examples', '#', 'Integration Examples', null));
+		naptime\navFactory::storeNav('mainNav',$this->mainNav);
+		
+
+		$this->subNav = new naptime\navMenu();
+		$this->subNav->addMenuItem(new naptime\MainNavItem('Getting Started', '#', 'Getting Started', null));
+		$this->subNav->addMenuItem(new naptime\MainNavItem('API Methods', '#', 'API Methods', null));
+		$this->subNav->addMenuItem(new naptime\MainNavItem('HTTP Status Codes', '#', 'HTTP Status Codes', null));
+		$this->subNav->addMenuItem(new naptime\MainNavItem('Authentication', '#', 'Authentication', null));
+		naptime\navFactory::storeNav('subNav', $this->subNav);
+		/**/
+		
+		$this->mainNav = naptime\navFactory::fetchNav('mainNav');
+		$this->subNav = naptime\navFactory::fetchNav('subNav');
+		$this->userNav = naptime\navFactory::fetchNav('userNav');
+
+		if (!isset($view) || is_null($view)) return;
+	
+		$view = $this->loadView($view);
 		$view->run();
 		
 		/* We want to preserve any output that may have already been

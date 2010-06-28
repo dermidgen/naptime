@@ -14,8 +14,8 @@ class admin extends \PASL\Web\Simpl\Page
 	
 	public function __construct()
 	{
-		$auth = true;
-		if ($auth == false) { header("Location: /login"); }
+		$auth = (isset($_SESSION['logged_in'])) ? $_SESSION['logged_in'] : false;
+		if ($auth !== true) { header("Location: /login"); }
 		
 		$this->mainNav = \naptime::GetInstance()->mainNav;
 		$this->subNav = \naptime::GetInstance()->subNav;

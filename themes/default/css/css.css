@@ -274,7 +274,7 @@ a, a:link, a:hover, a:active, a:visited {
 	color: #333;
 }
 
-.pageform input[type=text], .pageform textarea, .pageform input[type=password] {
+input[type=text], textarea, input[type=password] {
 	border: 1px solid #ccc;
 	-webkit-border-radius: 4px;
 	-moz-border-radius: 4px;

@@ -14,9 +14,15 @@ class auth extends \PASL\Web\Simpl\Page
 	public function run()
 	{
 		\naptime::GetInstance()->pageDescription = 'Please login to access the management features';
-		
-		if ($_POST) {
-			if ($_POST['username'] != 'root' || $_POST['password'] != 'password') \naptime\notices::GetInstance()->addNotice('Nope, wrong. Try again.', 'error');
+				
+		if (isset($_POST['username']) && isset($_POST['password'])) {
+			if ($_POST['username'] == 'root' && $_POST['password'] == 'password') {
+				$_SESSION['logged_in'] = true;
+				
+				header("Location: /admin");
+				exit;
+			}
+			else \naptime\notices::GetInstance()->addNotice('Nope, wrong. Try again.', 'error');
 		}
 		
 		$this->body = $this->loadAndParse('login.html');

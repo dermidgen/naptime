@@ -25,7 +25,7 @@ class navFactory
 		switch($navType)
 		{
 			default:
-				return new MainNavItem($title, $link, $alt, $parent);
+				return new MainNavItem($title, $alt, $link, $parent);
 		}
 	}
 	
@@ -53,23 +53,61 @@ class navFactory
 	
 	public static function fetchNav($id)
 	{
-		$db = db::GetInstance();
-		
-		if ($db->selectDB("nav_menus")) {
-			try {
-				$res = $db->getDoc($id);
-				if ($res) {
-					$menu = self::buildMenuFromArray($res->_id,$res->menuItems);
-					$menu->_rev = $res->_rev;
-					return $menu;
+		$dbFetch = function($menuName)
+		{
+			$db = db::GetInstance();
+			
+			if ($db->selectDB("nav_menus")) {
+				try {
+					$res = $db->getDoc($menuName);
+					if ($res) {
+						$menu = \naptime\navFactory::buildMenuFromArray($res->_id,$res->menuItems);
+						$menu->_rev = $res->_rev;
+						return $menu;
+					}
+				} catch (\CouchdbClientException $e) {
+					error_log('couchdb exception caught fetching: '.$menuName);
+					return null;
 				}
-			} catch (\CouchdbClientException $e) {
-				//error_log('couchdb exception caught');
-				return null;
 			}
-		}
+			
+			return null;
+		};
 		
-		return null;
+		// Some menus are stored as persistent objects - others are built on the fly
+		switch($id)
+		{
+			case 'mainNav':
+				return $dbFetch($id);
+			break;
+			case 'subNav':
+				return $dbFetch($id);
+			break;
+			case 'userNav':
+				$menu = self::menuFactory($id);
+				
+				if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true)
+					$menu->addMenuItem(self::itemFactory($id, (object)
+									array(
+										'title'	  => 'Logout',
+										'link'	  => '/logout',
+										'caption' => 'Logout',
+										'parent'  => null
+										)));
+				else
+					$menu->addMenuItem(self::itemFactory($id, (object)
+									array(
+										'title'	  => 'Login',
+										'link'	  => '/login',
+										'caption' => 'Login',
+										'parent'  => null
+										)));
+				
+				return $menu;
+			break;
+			default:
+				return null;
+		}
 	}
 	
 	public static function storeNav($id, \PASL\Web\Simpl\NavMenu $menu)
