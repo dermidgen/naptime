@@ -237,7 +237,7 @@ a, a:link, a:hover, a:active, a:visited {
 	color: #E04444;
 }
 
-.pageform {
+.pageform, fieldset {
 	border: 1px solid #ccc;
 	-webkit-border-radius: 4px;
 	-moz-border-radius: 4px;
@@ -269,7 +269,7 @@ a, a:link, a:hover, a:active, a:visited {
 	border-bottom: none;
 }
 
-.pageform legend {
+.pageform legend, fieldset legend {
 	font-size: 14px;
 	color: #333;
 }
@@ -320,4 +320,18 @@ button, input[type=submit], input[type=reset] {
 
 button[disabled=true],  input[disabled=true] {
 	color: #999;
+}
+
+.docList {
+	margin:0;
+	padding:0;
+	list-style:none;
+}
+
+.docList .doc {
+	margin:0;
+	padding:0 8px;
+	line-height: 25px;
+	background: #ccc;
+	border-bottom: 1px solid #fff;
 }

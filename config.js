@@ -1,1 +1,1 @@
-{"project":{"name":"Project","title":"REST API Documentation","description":"API Service Documentation"},"company":{"name":"Company"}}
+{"storage":{"path":"\/home\/dgraham\/.naptime\/docs"},"project":{"name":"Project","title":"REST API Documentation","description":"API Service Documentation"},"company":{"name":"Company"}}

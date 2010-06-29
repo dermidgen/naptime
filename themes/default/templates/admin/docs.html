@@ -1,0 +1,34 @@
+<fieldset>
+	<legend>Document List</legend>
+	
+	<ul class="docList">
+		<li class="doc">%docs%</li>
+	</ul>
+</fieldset>
+
+<br/>
+
+<form action="/admin/docs" method="post">
+
+<fieldset class="pageform">
+	
+	<legend>Document Editor</legend>
+	Use 
+	<a href="http://www.google.com/url?q=http://daringfireball.net/projects/markdown/syntax" target="_blank">Markdown</a>
+	to edit documents.  All documents are stored as .txt files for future
+	processing and conversion based on the Markdown syntax.
+
+	<ol>
+		<li>
+			<label for="docTitle" title="Please do not use spaces or special chars ._- are allowed">Document Title</label>
+			<input type="text" id="docTitle" name="docTitle" value="%docTitle%"/>
+		</li>
+		<li>
+			<label for="docBody">Document Body</label>
+			<textarea id="docBody" name="docBody" cols="90" rows="20">%docBody%</textarea>
+		</li>
+	</ol>
+
+</fieldset>
+
+</form>

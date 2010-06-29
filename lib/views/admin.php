@@ -53,9 +53,42 @@ class admin extends \PASL\Web\Simpl\Page
 		$this->TOKENS['projectTitle'] = \naptime::GetInstance()->config->project->title;
 		$this->TOKENS['projectDescription'] = \naptime::GetInstance()->config->project->description;
 		$this->TOKENS['companyName'] = \naptime::GetInstance()->config->company->name;
+		$this->TOKENS['storagePath'] = \naptime::GetInstance()->config->storage->path;
 
 		$this->body = $this->loadAndParse('admin/settings.html');
 				
+	}
+	
+	private function docs()
+	{
+		$module = \naptime::GetInstance()->loadModule('admin');
+
+		if ($_POST) {
+			
+		}
+		
+		if ($actn = \naptime::GetInstance()->getPath(2) == 'edit') {
+			switch($actn)
+			{
+				case 'edit':
+					$file = \naptime::GetInstance()->getPath(3);
+					$doc = $module->getDoc($file);
+					if ($doc) {
+						$this->TOKENS['docTitle'] = $file;
+						$this->TOKENS['docBody'] = $doc;
+					}
+					else \naptime\notices::GetInstance()->addNotice('Sorry, that doc does not exist.','error');
+				break;
+			}
+		} 
+
+		$this->subNav->hide();
+		\naptime::GetInstance()->pageDescription = 'Manage Documents';
+		
+		$docs = $module->getDocs();
+		$this->TOKENS['docs'] = join('<li>',$docs);
+		
+		$this->body = $this->loadAndParse('admin/docs.html');
 	}
 	
 	public function run()
@@ -68,8 +101,8 @@ class admin extends \PASL\Web\Simpl\Page
 			case "pages":
 				$this->body = join('/', \naptime::GetInstance()->getPath(0,2));
 			break;
-			case "docs" || "documents":
-				$this->body = join('/', \naptime::GetInstance()->getPath(0,2));
+			case "docs":
+				$this->docs();
 			break;
 			case "navigation":
 				$this->body = join('/', \naptime::GetInstance()->getPath(0,2));
