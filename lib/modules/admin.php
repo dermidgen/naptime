@@ -10,6 +10,11 @@ class admin
 	{
 	}
 	
+	public function saveDoc($file, $content)
+	{
+		return file_put_contents(\naptime::GetInstance()->config->storage->path . '/' . $file, $content);
+	}
+	
 	public function getDoc($file)
 	{
 		if (file_exists(\naptime::GetInstance()->config->storage->path . '/' . $file))

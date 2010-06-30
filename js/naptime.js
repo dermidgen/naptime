@@ -14,4 +14,26 @@ $(document).ready(function(){
 	
 	window.noticeTimeout = setTimeout(hideNotices, 3000);
 	
+	$(".docBody").draggable({ handle: '.docBody .dragHandle', containment: 'parent', axis: 'y' });
+	
+	var textarea = document.getElementById('docBody');
+	var converter = new Showdown.converter;
+	var preview = function() { $('.docPreview').html(converter.makeHtml(this.value)); }
+	window.onkeyup = textarea.onkeyup = textarea.onblur = preview;
 });
+
+function detachEditor() {
+	if ($(".docBody").hasClass('detached')) {
+		$(".docBody").removeClass('detached');
+		$("#docBody").removeClass('detached');
+		$(".dragHandle").hide();
+		$(".detachButton").html('Detach Editor');
+		$(".docBody").css('top','inherit');
+	}
+	else {
+		$(".docBody").addClass('detached');
+		$("#docBody").addClass('detached');
+		$(".dragHandle").show();
+		$(".detachButton").html('Dock Editor')
+	}
+}

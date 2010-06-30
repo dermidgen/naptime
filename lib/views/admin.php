@@ -4,6 +4,7 @@ namespace naptime\views;
 
 require_once('lib/MainNavItem.php');
 require_once('lib/auth.php');
+require_once('markdown.php');
 
 class admin extends \PASL\Web\Simpl\Page
 {
@@ -64,7 +65,13 @@ class admin extends \PASL\Web\Simpl\Page
 		$module = \naptime::GetInstance()->loadModule('admin');
 
 		if ($_POST) {
+			if (isset($_POST['docName'])) $docName = \naptime::GetInstance()->clean($_POST['docName']);
+			else return null;
 			
+			$docBody = $_POST['docBody'];
+			$res = $module->saveDoc($docName, $docBody);
+			if ($res) \naptime\notices::GetInstance()->addNotice('Saved!');
+			else \naptime\notices::GetInstance()->addNotice('Doh! Something went wrong and your changes could not be saved! - (verify filesystem permissions)','error');
 		}
 		
 		if ($actn = \naptime::GetInstance()->getPath(2) == 'edit') {
@@ -74,8 +81,9 @@ class admin extends \PASL\Web\Simpl\Page
 					$file = \naptime::GetInstance()->getPath(3);
 					$doc = $module->getDoc($file);
 					if ($doc) {
-						$this->TOKENS['docTitle'] = $file;
+						$this->TOKENS['docName'] = $file;
 						$this->TOKENS['docBody'] = $doc;
+						$this->TOKENS['docPreview'] = Markdown($doc);
 					}
 					else \naptime\notices::GetInstance()->addNotice('Sorry, that doc does not exist.','error');
 				break;
@@ -86,7 +94,11 @@ class admin extends \PASL\Web\Simpl\Page
 		\naptime::GetInstance()->pageDescription = 'Manage Documents';
 		
 		$docs = $module->getDocs();
-		$this->TOKENS['docs'] = join('<li>',$docs);
+		foreach($docs as &$doc)
+		{
+			$doc = '<li><a href="/admin/docs/edit/'.$doc.'">'.$doc.'</a></li>';
+		}
+		$this->TOKENS['docs'] = join("\n",$docs);
 		
 		$this->body = $this->loadAndParse('admin/docs.html');
 	}

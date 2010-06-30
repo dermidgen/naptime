@@ -55,7 +55,7 @@ class naptime extends Web\Page
 		};
 		
 		if(is_array($object)) array_walk($object, $clean, $strip_tags);
-		else if(is_string($obejct)) $clean($object);
+		else if(is_string($object)) $clean($object);
 		
 		return $object;
 	}

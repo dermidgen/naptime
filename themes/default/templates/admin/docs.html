@@ -2,7 +2,7 @@
 	<legend>Document List</legend>
 	
 	<ul class="docList">
-		<li class="doc">%docs%</li>
+		%docs%
 	</ul>
 </fieldset>
 
@@ -20,15 +20,24 @@
 
 	<ol>
 		<li>
-			<label for="docTitle" title="Please do not use spaces or special chars ._- are allowed">Document Title</label>
-			<input type="text" id="docTitle" name="docTitle" value="%docTitle%"/>
+			<label for="docName" title="Please do not use spaces or special chars ._- are allowed">Document Title</label>
+			<input type="text" id="docName" name="docName" value="%docName%"/>
 		</li>
 		<li>
-			<label for="docBody">Document Body</label>
-			<textarea id="docBody" name="docBody" cols="90" rows="20">%docBody%</textarea>
+			<div class="docEditorControls"><a href="javascript:;" onclick="detachEditor();" class="detachButton">[Detach Editor]</a></div>
+			<div class="docEditor clear">
+				<div class="docBody">
+					<div class="dragHandle">||</div>
+					<textarea id="docBody" name="docBody" cols="90" rows="20">%docBody%</textarea>
+				</div>
+				<div class="docPreview">%docPreview%</div>
+			</div>
 		</li>
 	</ol>
-
+	<div class="actions">
+		<input type="reset"/>
+		<input type="submit" value="submit"/>
+	</div>
 </fieldset>
 
 </form>
