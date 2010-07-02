@@ -389,4 +389,6 @@ button[disabled=true],  input[disabled=true] {
 	width: 730px;
 	max-width: 730px;
 	min-width: 730px;
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fdfdfd), to(#f0f0f0), color-stop(.5,#fff));
+	background: -moz-linear-gradient(0% 100% 90deg,#f0f0f0, #fbfbfb, #fdfdfd 100%);
 }

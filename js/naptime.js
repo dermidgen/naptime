@@ -1,5 +1,16 @@
 $(document).ready(function(){
 	
+	var docEditor = $(".docEditor");
+	var docBody = $(".docBody");
+	var docText = $("#docBody");
+	var docPreview = $(".docPreview");
+
+	var bounds = {
+			top:null,
+			bottom:null,
+			span:null
+		};
+	
 	// Intelligent hiding of the notifications bar	
 	var hideNotices = function()
 	{
@@ -12,9 +23,32 @@ $(document).ready(function(){
 		clearTimeout(window.noticeTimeout);
 	};
 	
+	var dragStart = function()
+	{
+		if (bounds.top == null) {
+			bounds.top = docBody.position().top;
+			bounds.span = docPreview.innerHeight(); 
+			bounds.bottom = bounds.top + bounds.span;
+		}
+	};
+	
+	var drag = function()
+	{
+		var cPos = docBody.position().top;
+		var cScroll = docText.scrollTop();
+		
+		var cPerc = (((cPos - bounds.top)/bounds.span));
+		var tScroll = Math.floor(cPerc * document.getElementById('docBody').scrollHeight);
+		
+		docText.scrollTop(tScroll);
+
+		//console.info(tScroll);	
+		//console.info(cPerc);
+	};
+	
 	window.noticeTimeout = setTimeout(hideNotices, 3000);
 	
-	$(".docBody").draggable({ handle: '.docBody .dragHandle', containment: 'parent', axis: 'y' });
+	$(".docBody").draggable({ handle: '.docBody .dragHandle', containment: 'parent', axis: 'y', drag: drag, start: dragStart });
 	
 	var textarea = document.getElementById('docBody');
 	var converter = new Showdown.converter;
