@@ -269,9 +269,11 @@ a, a:link, a:hover, a:active, a:visited {
 	border-bottom: none;
 }
 
-.pageform legend, fieldset legend {
-	font-size: 14px;
-	color: #333;
+.pageform legend, fieldset legend, .pageform .sectionTitle {
+	font-size: 16px;
+	font-weight: bold;
+	color:#559AD9;
+	text-shadow: rgba(0, 0, 0, .2) 1px 1px 1px;
 }
 
 input[type=text], textarea, input[type=password] {
@@ -301,6 +303,11 @@ input[type=text], textarea, input[type=password] {
 .pageform .actions {
 	margin-top: 10px;
 	text-align: right;
+}
+
+.pageform .sectionTitle {
+	border-bottom: 2px solid #DAE1D8;
+	padding: 25px 0 8px 0;
 }
 
 button, input[type=submit], input[type=reset] {

@@ -1,0 +1,1 @@
+{"storage":{"path":"\/usr\/share\/naptime\/docs"},"project":{"name":"Project","title":"REST API Documentation","description":"API Service Documentation"},"company":{"name":"Company"},"provider":{"google":{"username":"","password":""}}}

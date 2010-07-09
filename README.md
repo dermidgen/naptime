@@ -11,7 +11,9 @@ your development environment.
  * CouchDB
  * [PHP CouchDB Extension](http://www.topdog.za.net/php_couchdb_extension)
  * [openpasl](http://github.com/dermidgen/openpasl)
+ * Zend Framework or Zend Gdata 1.10.6+
  
 ### Installing Naptime!
 Naptime can be "installed" simply by extracting it into a directory that
 is on any virtual host.
+

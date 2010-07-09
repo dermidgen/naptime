@@ -34,30 +34,38 @@ class admin extends \PASL\Web\Simpl\Page
 	
 	private function settings()
 	{
+		$naptime = \naptime::GetInstance();
+		$notices = \naptime\notices::GetInstance();
+		
 		if ($_POST) {
-			$module = \naptime::GetInstance()->loadModule('admin');
-			$configOptions = \naptime::GetInstance()->clean($_POST);
+			$module = $naptime->loadModule('admin');
+			$configOptions = $naptime->clean($_POST);
 			
-			if ($configOptions['project_name'] == 'Fuck You') \naptime\notices::GetInstance()->addNotice('Really? That project name is pretty offensive, dude.','alert');
+			if ($configOptions['project_name'] == 'Fuck You') $notices->addNotice('Really? That project name is pretty offensive, dude.','alert');
 			
 			if($module->saveSettings($configOptions))
-				\naptime\notices::GetInstance()->addNotice('Your settings have been saved');
+				$notices->addNotice('Your settings have been saved');
 			else
-				\naptime\notices::GetInstance()->addNotice('Doh! Something went wrong and your changes could not be saved! - (verify config file permissions)','error');
+				$notices->addNotice('Doh! Something went wrong and your changes could not be saved! - (verify config file permissions)','error');
 		}
 
 		$this->subNav->hide();
 
-		\naptime::GetInstance()->pageDescription = 'Manage Naptime! Settings';
+		$naptime->pageDescription = 'Manage Naptime! Settings';
 
-		$this->TOKENS['projectName'] = \naptime::GetInstance()->config->project->name;
-		$this->TOKENS['projectTitle'] = \naptime::GetInstance()->config->project->title;
-		$this->TOKENS['projectDescription'] = \naptime::GetInstance()->config->project->description;
-		$this->TOKENS['companyName'] = \naptime::GetInstance()->config->company->name;
-		$this->TOKENS['storagePath'] = \naptime::GetInstance()->config->storage->path;
+		$this->TOKENS['projectName'] = $naptime->config->project->name;
+		$this->TOKENS['projectTitle'] = $naptime->config->project->title;
+		$this->TOKENS['projectDescription'] = $naptime->config->project->description;
+		$this->TOKENS['companyName'] = $naptime->config->company->name;
+		$this->TOKENS['storagePath'] = $naptime->config->storage->path;
+		$this->TOKENS['provider.google.username'] = $naptime->config->provider->google->username;
+		$this->TOKENS['provider.google.password'] = $naptime->config->provider->google->password;
+		
 
 		$this->body = $this->loadAndParse('admin/settings.html');
-				
+		
+		unset($naptime, $notices);
+		return null;
 	}
 	
 	private function docs()
