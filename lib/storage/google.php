@@ -27,21 +27,34 @@ class google implements iStorageProvider
   		$this->docs = new \Zend_Gdata_Docs($this->client);
 	}
 
-	public function getDoc($filename){}
+	public function getDoc($filename)
+	{
+		/*$query = new \Zend_Gdata_Docs_Query();
+		$query->setQuery($filename);
+		$feed = $this->docs->getDocumentListFeed($query);
+		$doc = $feed[0];*/
+		
+		list ($type, $docId) = explode(":",$filename);
+		
+		$sessToken = $this->client->getHttpClient->getAuthSubToken();
+		$opts = array(  
+			'http' => array(  
+				'method' => 'GET',  
+				'header' => "GData-Version: 3.0\r\nAuthorization: AuthSub token=\"$sessToken\"\r\n"  
+			)  
+		);  
+		$res = file_get_contents("https://docs.google.com/feeds/download/documents/Export?docID=".$docId."&exportFormat=txt", false, stream_context_create($opts));
+		
+		return $res;
+	}
 	
 	public function getDocs()
 	{
 		$query = new \Zend_Gdata_Docs_Query();
 		$query->setQuery(".doc.md");
 		$feed = $this->docs->getDocumentListFeed($query);
-		$docs = Array();
 		
-		foreach($feed as $item)
-		{
-			array_push($docs, $item->title);
-		}
-		
-		return $docs;
+		return $feed;
 	}
 	
 	public function saveDoc($filename, $content){}

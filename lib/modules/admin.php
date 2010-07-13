@@ -28,20 +28,22 @@ class admin
 	
 	public function getDocs($providerName=null)
 	{
+		$docs = Array();
+		
 		if (is_null($providerName)) { // We'll assume all providers
 		
 			$provider = \naptime\storage::providerFactory('local');
-			$docs = $provider->getDocs();
+			$docs['local'] = $provider->getDocs();
 			
 			$provider = \naptime\storage::providerFactory('google');
-			$docs = array_merge($docs, $provider->getDocs());
-			
-			return $docs;			
+			$docs['google'] = $provider->getDocs();
 		}
-		else 
+		else {
 			$provider = \naptime\storage::providerFactory($providerName);
+			$docs['local'] = $provider->getDocs();
+		}
 			
-		return $provider->getDocs();
+		return $docs;
 	}
 	
 	public function saveSettings($configOptions)

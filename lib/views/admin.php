@@ -86,10 +86,14 @@ class admin extends \PASL\Web\Simpl\Page
 			switch($actn)
 			{
 				case 'edit':
-					$file = \naptime::GetInstance()->getPath(3);
-					$doc = $module->getDoc($file);
+					
+					list($provider, $uri) = explode(':', \naptime::GetInstance()->getPath(3),2);
+					
+					$doc = $module->getDoc($uri, $provider);
+					
 					if ($doc) {
-						$this->TOKENS['docName'] = $file;
+						$title = ($provider == 'local') ? $uri : $doc->title;
+						$this->TOKENS['docName'] = $title;
 						$this->TOKENS['docBody'] = $doc;
 						$this->TOKENS['docPreview'] = Markdown($doc);
 					}
@@ -102,12 +106,25 @@ class admin extends \PASL\Web\Simpl\Page
 		\naptime::GetInstance()->pageDescription = 'Manage Documents';
 		
 		$docs = $module->getDocs();
-		foreach($docs as &$doc)
-		{
-			$doc = '<li><a href="/admin/docs/edit/'.$doc.'">'.$doc.'</a></li>';
-		}
-		$this->TOKENS['docs'] = join("\n",$docs);
 		
+		$this->TOKENS['docs'] = '<li class="label">Local Files:</li>';
+		foreach($docs['local'] as &$doc)
+		{
+			$doc = '<li><a href="/admin/docs/edit/local:'.$doc.'">'.$doc.'</a></li>';
+		}
+		$this->TOKENS['docs'] .= join("\n",$docs['local']);
+		$this->TOKENS['docs'] .= '<li class="label">Google Docs Files:</li>';
+		
+		foreach($docs['google'] as $doc)
+		{
+			$docLink = null;
+			foreach($doc->extensionElements as $em)
+			{
+				if ($em->rootElement === 'resourceId') $docLink = $em;
+			}
+			$this->TOKENS['docs'] .= '<li><a href="/admin/docs/edit/google:'.$docLink.'">'.$doc->title.'</a></li>';
+		}
+				
 		$this->body = $this->loadAndParse('admin/docs.html');
 	}
 	
